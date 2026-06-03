@@ -18,6 +18,7 @@
 		pkg-config
 		rustPlatform.bindgenHook
 		wrapGAppsHook3
+		copyDesktopItems
 	];
 
 	buildInputs = pkgs: with pkgs; [
@@ -46,6 +47,21 @@
 
 				nativeBuildInputs = nativeBuildInputs pkgs;
 				buildInputs = buildInputs pkgs;
+
+				desktopItems = [
+					(pkgs.makeDesktopItem {
+						name = "livesplit-one";
+						desktopName = "LiveSplit One";
+						comment = "Speedrun timer";
+						exec = "livesplit-one";
+						icon = "livesplit-one";
+						categories = [ "Utility" ];
+					})
+				];
+
+				postInstall = ''
+					install -Dm644 ${./icon.svg} $out/share/icons/hicolor/scalable/apps/livesplit-one.svg
+				'';
 			};
 		});
 
