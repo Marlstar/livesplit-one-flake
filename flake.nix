@@ -67,7 +67,7 @@
 		});
 
 		nixosModules.default = { lib, config, pkgs, ... }: {
-			options.programs.livesplit = {
+			options.programs.livesplit-one = {
 				enable = lib.mkEnableOption "enable LiveSplit";
 				setcap = lib.mkOption {
 					type = lib.types.bool;
@@ -77,9 +77,10 @@
 
 			config = let
 			pkg = self.packages.${pkgs.stdenv.hostPlatform.system}.default;
-			in lib.mkIf config.programs.livesplit.setcap {
+			cfg = config.programs.livesplit-one;
+			in lib.mkIf cfg.enable {
 				environment.systemPackages = [ pkg ];
-				security.wrappers.LiveSplitOne = {
+				security.wrappers.LiveSplitOne = lib.mkIf cfg.setcap {
 					source = "${pkg}/bin/LiveSplitOne";
 					capabilities = "cap_sys_ptrace+eip";
 					owner = "root";
