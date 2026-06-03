@@ -80,8 +80,8 @@
 			cfg = config.programs.livesplit-one;
 			in lib.mkIf cfg.enable {
 				environment.systemPackages = [ pkg ];
-				security.wrappers.LiveSplitOne = lib.mkIf cfg.setcap {
-					source = "${pkg}/bin/LiveSplitOne";
+				security.wrappers.livesplit-one = lib.mkIf cfg.setcap {
+					source = "${pkg}/bin/livesplit-one";
 					capabilities = "cap_sys_ptrace+eip";
 					owner = "root";
 					group = "root";
