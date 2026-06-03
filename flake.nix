@@ -9,7 +9,7 @@
 		};
 	};
 
-	outputs = { nixpkgs, livesplit-one-druid, ... }: let
+	outputs = { self, nixpkgs, livesplit-one-druid, ... }: let
 	systems = [ "x86_64-linux" "aarch64-linux" ];
 	forAllSystems = nixpkgs.lib.genAttrs systems;
 	pkgsFor = system: import nixpkgs { inherit system; };
@@ -65,5 +65,27 @@
 				RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
 			};
 		});
+
+		nixosModules.default = { lib, config, pkgs, ... }: {
+			options.programs.livesplit = {
+				enable = lib.mkEnableOption "enable LiveSplit";
+				setcap = lib.mkOption {
+					type = lib.types.bool;
+					default = true;
+				};
+			};
+
+			config = let
+			pkg = self.packages.${pkgs.stdenv.hostPlatform.system}.default;
+			in lib.mkIf config.programs.livesplit.setcap {
+				environment.systemPackages = [ pkg ];
+				security.wrappers.LiveSplitOne = {
+					source = "${pkg}/bin/LiveSplitOne";
+					capabilities = "cap_sys_ptrace+eip";
+					owner = "root";
+					group = "root";
+				};
+			};
+		};
 	};
 }
