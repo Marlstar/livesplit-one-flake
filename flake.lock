@@ -1,0 +1,44 @@
+{
+  "nodes": {
+    "livesplit-one-druid": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777845010,
+        "narHash": "sha256-LCPy+dz/I2LDLjj+Alv2lIB01sdVBqW6kzj9VFm+N8M=",
+        "owner": "AlexKnauth",
+        "repo": "livesplit-one-druid",
+        "rev": "ae7edb1aec87a2bd15066bc64fe69064eafaf8bf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AlexKnauth",
+        "repo": "livesplit-one-druid",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1780243769,
+        "narHash": "sha256-x5UQuRsH3MqI0U9afaXSNqzTPSeZlRLvFAav2Ux1pNw=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "331800de5053fcebacf6813adb5db9c9dca22a0c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "livesplit-one-druid": "livesplit-one-druid",
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
