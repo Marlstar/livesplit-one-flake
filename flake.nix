@@ -68,10 +68,25 @@
 					install -Dm644 ${./icon.svg} $out/share/icons/hicolor/scalable/apps/livesplit-one.svg
 				'';
 
+				dontWrapGApps = true;
+
 				preFixup = ''
+					mv $out/bin/livesplit-one $out/bin/.livesplit-one-bare
+
+					cat > $out/bin/.livesplit-one-redirect <<-EOF
+						#!${pkgs.runtimeShell}
+						if [ -x /run/wrappers/bin/livesplit-one-bare ]; then
+							exec /run/wrappers/bin/livesplit-one-bare "\$@"
+						fi
+						exec $out/bin/.livesplit-one-bare "\$@"
+					EOF
+					chmod +x $out/bin/.livesplit-one-redirect
+
 					gappsWrapperArgs+=(
 						--prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.zenity ]}
 					)
+					makeWrapper $out/bin/.livesplit-one-redirect $out/bin/livesplit-one \
+						"''${gappsWrapperArgs[@]}"
 				'';
 			};
 		});
@@ -96,10 +111,6 @@
 		nixosModules.default = { lib, config, pkgs, ... }: {
 			options.programs.livesplit-one = {
 				enable = lib.mkEnableOption "enable LiveSplit";
-				setcap = lib.mkOption {
-					type = lib.types.bool;
-					default = true;
-				};
 			};
 
 			config = let
@@ -107,8 +118,8 @@
 			cfg = config.programs.livesplit-one;
 			in lib.mkIf cfg.enable {
 				environment.systemPackages = [ pkg ];
-				security.wrappers.livesplit-one = lib.mkIf cfg.setcap {
-					source = "${pkg}/bin/livesplit-one";
+				security.wrappers.livesplit-one-bare = {
+					source = "${pkg}/bin/.livesplit-one-bare";
 					capabilities = "cap_sys_ptrace+eip";
 					owner = "root";
 					group = "root";
