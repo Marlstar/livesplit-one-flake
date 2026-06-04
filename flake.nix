@@ -84,6 +84,7 @@
 
 					gappsWrapperArgs+=(
 						--prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.zenity ]}
+						--set GTK_USE_PORTAL 0
 					)
 					makeWrapper $out/bin/.livesplit-one-redirect $out/bin/livesplit-one \
 						"''${gappsWrapperArgs[@]}"
