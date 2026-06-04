@@ -26,6 +26,11 @@
 		cairo
 		gtk3
 		gsettings-desktop-schemas
+		adwaita-icon-theme
+		hicolor-icon-theme
+		gvfs
+		dconf
+		shared-mime-info
 	];
 	in {
 		packages = forAllSystems (system: let
@@ -61,6 +66,12 @@
 
 				postInstall = ''
 					install -Dm644 ${./icon.svg} $out/share/icons/hicolor/scalable/apps/livesplit-one.svg
+				'';
+
+				preFixup = ''
+					gappsWrapperArgs+=(
+						--prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.zenity ]}
+					)
 				'';
 			};
 		});
